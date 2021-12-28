@@ -4,6 +4,7 @@ const app = express();
 // connect to database
 const db = require("./config/database");
 db.sync()
+//db.sync({ force: true });
 
 // set view html file
 app.set("view engine", "ejs");
