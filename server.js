@@ -1,15 +1,14 @@
 const express = require("express");
 const app = express();
+const cors = require('cors');
+app.use(cors());
+app.options('*', cors());
 
-// connect to database
-const db = require("./config/database");
-db.sync()
-//db.sync({ force: true });
 
 // set view html file
 app.set("view engine", "ejs");
 
-
+app.use(express.json());
 
 
 // ====================== root path
@@ -22,5 +21,15 @@ app.get("/", (req, res) => {
 const postsRouter = require('./routers/posts');
 app.use("/posts", postsRouter);
 
+const usersRouter = require('./routers/Users');
+app.use("/users", usersRouter);
+
+const loginRouter = require('./routers/Login');
+app.use("/login", loginRouter);
+
+
+app.use((req, res) => {
+    res.status(404).send("404 notfound");
+})
 // ====================== port
 app.listen(3000);

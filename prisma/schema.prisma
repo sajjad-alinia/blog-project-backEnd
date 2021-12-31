@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  firstName    String    @db.VarChar(50)
+  lastName     String    @db.VarChar(50)
+  mobile       String?   @db.VarChar(15)
+  email        String?
+  password     String
+  registerDate DateTime  @default(now()) @db.Timestamp(6)
+  lastLogin    DateTime  @default(now())
+  profileImage String?
+  Posts        Posts[]
+  Session      Session[]
+}
+
+model Session {
+  uid       Int
+  token     String   @id @default(uuid())
+  loginAt   DateTime @default(now())
+  userAgent String?
+
+  users Users @relation(fields: [uid], references: [id])
+}
+
+model Posts {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(100)
+  metaTitle String   @db.VarChar(256)
+  summary   String   @db.VarChar(100)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String   @db.LongText
+
+  authorId     Int
+  users        Users          @relation(fields: [authorId], references: [id])
+  PostCategory PostCategory[]
+  Comments     Comments[]
+}
+
+model Category {
+  id           Int            @id @default(autoincrement())
+  parentId     Int
+  title        String         @db.VarChar(100)
+  metaTitle    String?        @db.VarChar(100)
+  content      String?        @db.LongText
+  PostCategory PostCategory[]
+}
+
+model PostCategory {
+  id         Int @id @default(autoincrement())
+  postId     Int
+  categoryId Int
+
+  posts    Posts    @relation(fields: [postId], references: [id])
+  Category Category @relation(fields: [categoryId], references: [id])
+}
+
+model Comments {
+  id          Int      @id @default(autoincrement())
+  parentId    Int?
+  title       String   @db.VarChar(50)
+  published   Boolean  @default(false)
+  createAt    DateTime @default(now())
+  publishedAt DateTime @updatedAt
+  content     String   @db.LongText
+
+  postId Int
+  posts  Posts @relation(fields: [postId], references: [id])
+}
