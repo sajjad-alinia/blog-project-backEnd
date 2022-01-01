@@ -1,11 +1,27 @@
-function auth(req, res, next) {
+const { PrismaClient } = require("@prisma/client")
+const prisma = new PrismaClient()
+
+async function auth(req, res, next) {
     if (!req.headers.authorization) {
-        return res.status(403).json({ error: 'no token send!!!' });
+        return res.status(403).json({ message: 'no token send!!!' });
     }
     else {
-        res.json(req.headers.authorization);
+        const findToken = await prisma.session.findUnique({
+            where: {
+                token: req.headers.authorization,
+            },
+            select: {
+                uid: true
+            }
+        })
+        if (findToken != null) {
+
+            next();
+        }
+        else {
+            res.status(401).json({ message: "token invalid" });
+        }
     }
-    next();
 }
 
 module.exports = auth

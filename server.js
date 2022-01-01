@@ -11,6 +11,7 @@ app.set("view engine", "ejs");
 app.use(express.json());
 
 
+
 // ====================== root path
 app.get("/", (req, res) => {
     console.log('root');
@@ -18,14 +19,17 @@ app.get("/", (req, res) => {
 })
 
 // ====================== router
-const postsRouter = require('./routers/posts');
-app.use("/posts", postsRouter);
+const postsRouter = require('./routers/post');
+app.use("/post", postsRouter);
 
 const usersRouter = require('./routers/Users');
 app.use("/users", usersRouter);
 
 const loginRouter = require('./routers/Login');
 app.use("/login", loginRouter);
+
+const logoutRouter = require('./routers/Logout');
+app.use("/logout", logoutRouter);
 
 
 app.use((req, res) => {

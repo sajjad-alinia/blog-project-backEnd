@@ -39,10 +39,17 @@ router.post("/", async (req, res) => {
                 mobile: newUser.mobile,
                 email: newUser.email,
                 password: hashPassword,
+            },
+            select: {
+                username: true,
+                firstName: true,
+                lastName: true,
+                mobile: true,
+                email: true
             }
         })
 
-        res.status(200).json(createUser);
+        res.status(201).json(createUser);
     }
 })
 
