@@ -1,39 +1,41 @@
 const express = require("express");
 const app = express();
-const cors = require('cors');
+const cors = require("cors");
 app.use(cors());
-app.options('*', cors());
-
+app.options("*", cors());
 
 // set view html file
 app.set("view engine", "ejs");
 
 app.use(express.json());
 
-
-
 // ====================== root path
 app.get("/", (req, res) => {
-    console.log('root');
-    res.render("index", { text: " blog project" })
-})
+  console.log("root");
+  res.render("index", { text: " blog project" });
+});
 
 // ====================== router
-const postsRouter = require('./routers/post');
+const postsRouter = require("./routers/post");
 app.use("/post", postsRouter);
 
-const usersRouter = require('./routers/Users');
+const usersRouter = require("./routers/Users");
 app.use("/users", usersRouter);
 
-const loginRouter = require('./routers/Login');
+const loginRouter = require("./routers/Login");
 app.use("/login", loginRouter);
 
-const logoutRouter = require('./routers/Logout');
+const logoutRouter = require("./routers/Logout");
 app.use("/logout", logoutRouter);
 
+const categoryRouter = require("./routers/Category");
+app.use("/category", categoryRouter);
+
+const commentRouter = require("./routers/Comment");
+app.use("/comment", commentRouter);
 
 app.use((req, res) => {
-    res.status(404).send("404 notfound");
-})
+  res.status(404).send("404 notfound");
+});
 // ====================== port
 app.listen(3000);
