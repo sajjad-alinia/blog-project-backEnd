@@ -11,7 +11,11 @@ router.post("/", auth, async (req, res) => {
       parentId: req.body.parentId,
       title: req.body.title,
       content: req.body.content,
-      postId: req.body.postId,
+      postId: {
+        create: {
+
+        }
+      }
     },
   });
 
