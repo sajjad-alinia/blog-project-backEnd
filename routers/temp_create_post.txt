@@ -1,0 +1,37 @@
+try {
+    const savePost = await prisma.posts.create({
+      data: {
+        authorId: req.userId,
+        title: req.body.title,
+        metaTitle: req.body.metaTitle,
+        summary: req.body.summary,
+        content: req.body.content,
+        PostCategory: {
+          create: [
+            {
+              Category: {
+                connect: {
+                  id: req.body.catId,
+                },
+              },
+            },
+          ],
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        metaTitle: true,
+        summary: true,
+        content: true,
+      },
+    });
+
+    if (savePost) {
+      res.status(201).json(savePost);
+    } else {
+      res.status(500).json({ message: "server error post create faild" });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }

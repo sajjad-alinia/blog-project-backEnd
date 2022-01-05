@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 router.post("/", auth, async (req, res) => {
   try {
+
     const savePost = await prisma.posts.create({
       data: {
         authorId: req.userId,
@@ -15,15 +16,7 @@ router.post("/", auth, async (req, res) => {
         summary: req.body.summary,
         content: req.body.content,
         PostCategory: {
-          create: [
-            {
-              Category: {
-                connect: {
-                  id: req.body.catId,
-                },
-              },
-            },
-          ],
+          create: req.body.catId
         },
       },
       select: {
