@@ -76,7 +76,32 @@ router.patch("/:id", auth, async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
   try {
-    const getAllPosts = await prisma.posts.findMany({});
+    const getAllPosts = await prisma.posts.findMany({
+      where: {
+        authorId: req.userId,
+      },
+      select: {
+        id: true,
+        title: true,
+        updatedAt: true,
+        createdAt: true,
+        metaTitle: true,
+        summary: true,
+        published: true,
+        content: true,
+        PostCategory: {
+          select: {
+            Category: true
+          }
+        },
+        users: {
+          select: {
+            username: true
+          }
+        }
+      },
+
+    });
 
     if (getAllPosts) {
       res.status(200).json(getAllPosts);
