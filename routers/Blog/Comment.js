@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middleware/auth");
+const auth = require("../../middleware/auth");
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -12,10 +12,8 @@ router.post("/", auth, async (req, res) => {
       title: req.body.title,
       content: req.body.content,
       postId: {
-        create: {
-
-        }
-      }
+        create: {},
+      },
     },
   });
 

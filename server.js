@@ -16,24 +16,33 @@ app.get("/", (req, res) => {
 });
 
 // ====================== router
-const postsRouter = require("./routers/post");
-app.use("/post", postsRouter);
+// =========== manage
+const managePostsRouter = require("./routers/ControlPanel/post");
+app.use("/manage/post", managePostsRouter);
 
-const usersRouter = require("./routers/Users");
-app.use("/users", usersRouter);
+const manageUsersRouter = require("./routers/ControlPanel/Users");
+app.use("/manage/users", manageUsersRouter);
 
-const loginRouter = require("./routers/Login");
-app.use("/login", loginRouter);
+const manageLoginRouter = require("./routers/ControlPanel/Login");
+app.use("/manage/login", manageLoginRouter);
 
-const logoutRouter = require("./routers/Logout");
-app.use("/logout", logoutRouter);
+const manageLogoutRouter = require("./routers/ControlPanel/Logout");
+app.use("/manage/logout", manageLogoutRouter);
 
-const categoryRouter = require("./routers/Category");
-app.use("/category", categoryRouter);
+const manageCategoryRouter = require("./routers/ControlPanel/Category");
+app.use("/manage/category", manageCategoryRouter);
 
-const commentRouter = require("./routers/Comment");
-app.use("/comment", commentRouter);
+const manageCommentRouter = require("./routers/ControlPanel/Comment");
+app.use("/manage/comment", manageCommentRouter);
 
+// ========== blog
+const blogPostRouter = require("./routers/Blog/post");
+app.use("/blog/post", blogPostRouter);
+
+const blogCategoryRouter = require("./routers/Blog/Category");
+app.use("/blog/category", blogCategoryRouter);
+
+// ========== not found
 app.use((req, res) => {
   res.status(404).send("404 notfound");
 });

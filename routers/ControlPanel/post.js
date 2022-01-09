@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middleware/auth");
+const auth = require("../../middleware/auth");
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 router.post("/", auth, async (req, res) => {
   try {
-
     const savePost = await prisma.posts.create({
       data: {
         authorId: req.userId,
@@ -16,7 +15,7 @@ router.post("/", auth, async (req, res) => {
         summary: req.body.summary,
         content: req.body.content,
         PostCategory: {
-          create: req.body.catId
+          create: req.body.catId,
         },
       },
       select: {
@@ -74,9 +73,29 @@ router.patch("/:id", auth, async (req, res) => {
   }
 });
 
+router.get("/count", auth, async (req, res) => {
+  try {
+    const postCount = await prisma.posts.count({
+      where: {
+        authorId: req.userId,
+      },
+    });
+
+    if (postCount) {
+      res.status(200).json(postCount);
+    } else {
+      res.status(500).json({ message: "server getPost faild" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/", auth, async (req, res) => {
   try {
     const getAllPosts = await prisma.posts.findMany({
+      skip: req.body.skip,
+      take: req.body.take,
       where: {
         authorId: req.userId,
       },
@@ -91,16 +110,15 @@ router.get("/", auth, async (req, res) => {
         content: true,
         PostCategory: {
           select: {
-            Category: true
-          }
+            Category: true,
+          },
         },
         users: {
           select: {
-            username: true
-          }
-        }
+            username: true,
+          },
+        },
       },
-
     });
 
     if (getAllPosts) {
@@ -109,7 +127,7 @@ router.get("/", auth, async (req, res) => {
       res.status(500).json({ message: "server getPost faild" });
     }
   } catch (error) {
-    res.status(400).json({ message: error });
+    res.status(500).json({ message: error.message });
   }
 });
 
