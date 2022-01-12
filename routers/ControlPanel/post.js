@@ -93,8 +93,6 @@ router.get("/count", auth, async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
   try {
-    console.log(req.query.skip);
-    console.log(req.query.take);
     const getAllPosts = await prisma.posts.findMany({
       skip: parseInt(req.query.skip),
       take: parseInt(req.query.take),
